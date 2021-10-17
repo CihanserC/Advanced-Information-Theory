@@ -1,0 +1,14 @@
+C:\Users\User\source\repos\Ad_Info_Theory\Ad_Info_Theory\bin\Debug\netcoreapp3.1\Ad_Info_Theory.exe
+C:\Users\User\source\repos\Ad_Info_Theory\Ad_Info_Theory\bin\Debug\netcoreapp3.1\Ad_Info_Theory.deps.json
+C:\Users\User\source\repos\Ad_Info_Theory\Ad_Info_Theory\bin\Debug\netcoreapp3.1\Ad_Info_Theory.runtimeconfig.json
+C:\Users\User\source\repos\Ad_Info_Theory\Ad_Info_Theory\bin\Debug\netcoreapp3.1\Ad_Info_Theory.runtimeconfig.dev.json
+C:\Users\User\source\repos\Ad_Info_Theory\Ad_Info_Theory\bin\Debug\netcoreapp3.1\Ad_Info_Theory.dll
+C:\Users\User\source\repos\Ad_Info_Theory\Ad_Info_Theory\bin\Debug\netcoreapp3.1\Ad_Info_Theory.pdb
+C:\Users\User\source\repos\Ad_Info_Theory\Ad_Info_Theory\obj\Debug\netcoreapp3.1\Ad_Info_Theory.csproj.AssemblyReference.cache
+C:\Users\User\source\repos\Ad_Info_Theory\Ad_Info_Theory\obj\Debug\netcoreapp3.1\Ad_Info_Theory.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\User\source\repos\Ad_Info_Theory\Ad_Info_Theory\obj\Debug\netcoreapp3.1\Ad_Info_Theory.AssemblyInfoInputs.cache
+C:\Users\User\source\repos\Ad_Info_Theory\Ad_Info_Theory\obj\Debug\netcoreapp3.1\Ad_Info_Theory.AssemblyInfo.cs
+C:\Users\User\source\repos\Ad_Info_Theory\Ad_Info_Theory\obj\Debug\netcoreapp3.1\Ad_Info_Theory.csproj.CoreCompileInputs.cache
+C:\Users\User\source\repos\Ad_Info_Theory\Ad_Info_Theory\obj\Debug\netcoreapp3.1\Ad_Info_Theory.dll
+C:\Users\User\source\repos\Ad_Info_Theory\Ad_Info_Theory\obj\Debug\netcoreapp3.1\Ad_Info_Theory.pdb
+C:\Users\User\source\repos\Ad_Info_Theory\Ad_Info_Theory\obj\Debug\netcoreapp3.1\Ad_Info_Theory.genruntimeconfig.cache
