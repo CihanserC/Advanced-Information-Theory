@@ -11,8 +11,8 @@ namespace Ad_Info_Theory
              
         static void Main(string[] args)
         {
-            string ReadText = Filtering.readRawText();
-            string FilteredText = Filtering.filterText(ReadText);
+            string ReadText = Filtering.ReadRawText();
+            string FilteredText = Filtering.FilterText(ReadText);
 
             // Filtered data is written in "FilteredText" file.
             Filtering.WriteText(Filtering.FilteredTextPath, FilteredText);

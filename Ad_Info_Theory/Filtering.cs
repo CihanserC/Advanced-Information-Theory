@@ -15,7 +15,7 @@ namespace Ad_Info_Theory
         public static string DiagramPath = @"C:\Users\User\Desktop\Adv_Inf_Th._HW1\Diagram.txt";
         public static string ConditionalPath = @"C:\Users\User\Desktop\Adv_Inf_Th._HW1\Conditional.txt";
 
-        public static string readRawText()
+        public static string ReadRawText()
         {
             string text = "";
             //Read the input file
@@ -31,7 +31,7 @@ namespace Ad_Info_Theory
             return text;
         }
 
-        public static string eliminateConsecutiveBlanks(string text)
+        public static string EliminateConsecutiveBlanks(string text)
         {
             string resultString = text;
             var strResult = new StringBuilder();
@@ -66,7 +66,7 @@ namespace Ad_Info_Theory
             }
         }
 
-        public static string prepareText(string FilteredText)
+        public static string PrepareText(string FilteredText)
         {
             var strResult = new StringBuilder();
             string upperCaseLetters = FilteredText.ToUpper();
@@ -80,7 +80,7 @@ namespace Ad_Info_Theory
             return upperCaseLetters;
         }
 
-        public static string filterText(string RawText)
+        public static string FilterText(string RawText)
         {
             // 1- Filter out punctuation characters and numbers.
             // 2- The must not be 2 space characters consecutively.
@@ -98,11 +98,11 @@ namespace Ad_Info_Theory
             }
 
             // Eliminate consecutively duplicating blank characters.
-            FilteredText = eliminateConsecutiveBlanks(FilteredText);
+            FilteredText = EliminateConsecutiveBlanks(FilteredText);
             // Trim after the 100.000 characters
             FilteredText = TrimCharacters(FilteredText);
             // Make letters uppercase and use "-" instead of blank char.
-            FilteredText = prepareText(FilteredText);
+            FilteredText = PrepareText(FilteredText);
 
             return FilteredText;
         }
