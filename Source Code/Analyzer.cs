@@ -5,12 +5,15 @@ using System.Text;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Ad_Info_Theory
+namespace InfoTheory
+
 {
 
     public class Analyzer
     {
-        public static char[] Alphabet = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '-' };
+        public static char[] Alphabet = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+                                          'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '-' };
+        //'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'ı', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',  };
 
         public static List<Letters> SingleLetters = new List<Letters>();
         public static List<Letters> JointLetters1 = new List<Letters>();
@@ -20,15 +23,20 @@ namespace Ad_Info_Theory
         public static int    TotalCount = 0;
         public static double TotalProbability = 0;
         public static double TotalEntropy = 0;
-                             
-        // Sum of Diagrams   
+
+        // Sum of Digrams   
         public static int    TotalJointCount = 0;
         public static double TotalJointProbability = 0;
         public static double TotalJointEntropy = 0;
+        //public static double DiRedundancy = 0;
 
         // Sum of Conditionals
         public static double totalCondProbability = 0;
         public static double totalCondEntropy = 0;
+        //public static double CondRedundancy = 0;
+
+        public static double Redundancy = 0;
+        public static double AverageLength = 0;
 
 
         public static void SetFrequency(string FilteredText)
@@ -58,6 +66,7 @@ namespace Ad_Info_Theory
                     strResult.Clear();
 
                     JointLetters1.Add(new Letters {  Name=  jointLetters, Frequency = jointCharCount }) ;
+                    CondLetters.Add(new Letters { Name = jointLetters, Frequency = jointCharCount });
                     TotalJointCount += jointCharCount;
 
                 }
@@ -68,7 +77,7 @@ namespace Ad_Info_Theory
         {
             for (int i = 0; i < singleLetterList.Count; i++)
             {
-                singleLetterList[i].Probability = (double)singleLetterList[i].Frequency / TotalCount;
+                singleLetterList[i].Probability = Math.Round((double)singleLetterList[i].Frequency / TotalCount, 5); 
                 TotalProbability += singleLetterList[i].Probability;
             }
             TotalProbability = Math.Round(TotalProbability, 5);
@@ -84,75 +93,100 @@ namespace Ad_Info_Theory
                 int index1 = Array.IndexOf(Alphabet, firstLetter);
                 int index2 = Array.IndexOf(Alphabet, secondLetter);
 
-                item.Probability = Math.Round(singleLetterList[index1].Probability * singleLetterList[index2].Probability, 9);
+                item.Probability = Math.Round(singleLetterList[index1].Probability * singleLetterList[index2].Probability, 5);
 
                 TotalJointProbability += item.Probability;
             }
+            TotalJointProbability = Math.Round(TotalJointProbability, 4);
         }
 
         public static void SetCondProbability()
         {
             // p(A,B) / p(A, A to Z)
 
-            double condProb = 0;
+            int i = 0;
+            int j = 0;
+            int k = 0;
+            double[] condProbFirstLetter = new double[Alphabet.Length];
 
-            foreach (var item in JointLetters1)
+            while (i < JointLetters1.Count)
             {
-                foreach (var j in JointLetters1)
+                double condProb = 0;
+
+                while ((JointLetters1[i].Name[0] == JointLetters1[j].Name[0]) && j < JointLetters1.Count -1)
                 {
-                    if(item.Name[0] == j.Name[0])
-                    {
-                        condProb += j.Probability;
-                    }
+                    condProb += JointLetters1[j].Probability;
+                    j++;
                 }
-                condProb = Math.Round(condProb, 5);
-                item.ConditionalProbability = Math.Round(item.Probability / condProb, 5);
+                condProbFirstLetter[k] = Math.Round(condProb,6);
+                k++;
+                i += Alphabet.Length;
             }
+
+            int m = 0;
+            while (m < CondLetters.Count)
+            {
+                CondLetters[m].Probability = Math.Round(JointLetters1[m].Probability / condProbFirstLetter[m/Alphabet.Length],5);
+                m++;
+            }
+
+            foreach (var item2 in CondLetters)
+            {
+                totalCondProbability += item2.Probability;
+            }
+            totalCondProbability = Math.Round(totalCondProbability, 4);
 
         }
 
         public static void SetEntropyForAll(List<Letters> Letters, int CalculationType)
         {
-            double total = 0;
+            double total = 0.0;
 
-            if (CalculationType == 1 || CalculationType == 2)
+            foreach (var item in Letters)
             {
-                foreach (var item in Letters)
-                {
-                    item.Entropy = Math.Round(-1 * (item.Probability * Math.Log2(item.Probability)), 5);
-                    total += item.Entropy;
-                }
-            }
-            else if (CalculationType == 3)
-            {
-                foreach (var item in Letters)
-                {
-                    item.Entropy = Math.Round(-1 * (item.ConditionalProbability * Math.Log2(item.ConditionalProbability)), 5);
-                    total += item.Entropy;
-                }
-            }
+                item.Entropy = Math.Round(-1 * (item.Probability * Math.Log2(item.Probability)), 5);
+                total +=  Double.IsNaN(item.Entropy) ? 0: item.Entropy; 
+
+            }           
 
             if (CalculationType == 1)
             {
-                TotalEntropy = total;
+                TotalEntropy = Math.Round(total,4);
             }
             else if (CalculationType == 2)
             {
-                TotalJointEntropy = total;
+                TotalJointEntropy = Math.Round(total, 4);
             }
             else if (CalculationType == 3)
             {
-                totalCondEntropy = total;
+                totalCondEntropy = Math.Round(total, 4);
             }
+        }
 
+        // Calculates redundancy for all 3 tables.
+        public static void CalculateRedundancy(double entropy)
+        {
+            // 27 is the total character quantity in the alphabet.
+            Redundancy = Math.Round(1 - (entropy / Alphabet.Length), 4);
+        }
+
+        public static void CheckNaNDoubles(List<Letters> LetterList)
+        {
+            foreach (var item in LetterList)
+            {
+                if(item.Frequency == 0 || item.Probability == 0)
+                {
+                    item.Entropy = 0;
+                }
+            }
         }
 
         public static void WriteMonogramTable()
         {
             string[] columns = { "Monogram", "Frequency", "Probability", "Entropy" };
-            string[] lines   = { "========", "========= ", "===========", "=======" };
+            string[] lines   = { "========", "=========", "===========", "=======" };
             string content = "";
-
+            CheckNaNDoubles(SingleLetters);
             // Add columns and lines
             for (int i = 0; i < columns.Length; i++)
             {
@@ -176,19 +210,22 @@ namespace Ad_Info_Theory
             }
 
             // Writing last row
-            content += "Total:".PadRight(15) + Convert.ToString(TotalCount).PadRight(15) +
-           Convert.ToString(TotalProbability).PadRight(15) +
-           Convert.ToString(TotalEntropy).PadRight(15);
+            content += "Total:   ".PadRight(15) + Convert.ToString(TotalCount).PadRight(15) +
+                        Convert.ToString(TotalProbability).PadRight(15) +
+                        Convert.ToString(TotalEntropy).PadRight(15);
 
-           Filtering.WriteText(Filtering.MonogramPath, content);
+
+            content += "\nRedundancy:".PadRight(16) + Convert.ToString(Redundancy).PadRight(15);
+
+            Filtering.WriteText(Filtering.MonogramPath, content);
         }
 
         public static void WriteDigramTable()
         {
             string[] columns = { "Diagram", "Frequency", "Probability", "Entropy" };
-            string[] lines   = { "=======", "========= ", "===========", "=======" };
+            string[] lines   = { "=======", "=========", "===========", "=======" };
             string content = "";
-
+            CheckNaNDoubles(JointLetters1);
             // Add columns and lines
             for (int i = 0; i < columns.Length; i++)
             {
@@ -211,11 +248,13 @@ namespace Ad_Info_Theory
             }
 
             // Writing last row
-            content += "Total:".PadRight(15) + Convert.ToString(TotalCount).PadRight(15) +
-            Convert.ToString(TotalProbability).PadRight(15) +
-            Convert.ToString(TotalEntropy).PadRight(15);
+            content += "Total:".PadRight(15) + Convert.ToString(TotalJointCount).PadRight(15) +
+                        Convert.ToString(TotalJointProbability).PadRight(15) +
+                        Convert.ToString(TotalJointEntropy).PadRight(15);
 
-            Filtering.WriteText(Filtering.DiagramPath, content);
+            content += "\nRedundancy: ".PadRight(16) + Convert.ToString(Redundancy).PadRight(15);
+
+            Filtering.WriteText(Filtering.DigramPath, content);
         }
 
         public static void WriteConditionalTable()
@@ -223,7 +262,7 @@ namespace Ad_Info_Theory
             string[] columns = { "Conditional", "Probability", "Entropy" };
             string[] lines   = { "===========", "===========", "=======" };
             string content = "";
-
+            CheckNaNDoubles(CondLetters);
             // Add columns and lines
             for (int i = 0; i < columns.Length; i++)
             {
@@ -239,26 +278,26 @@ namespace Ad_Info_Theory
             foreach (var item in JointLetters1)
             {
                 content += Convert.ToString(item.Name).PadRight(18) +
-                           Convert.ToString(item.ConditionalProbability).PadRight(18) +
+                           Convert.ToString(item.Probability).PadRight(18) +
                            Convert.ToString(item.Entropy).PadRight(18);
                 content += "\n";
 
             }
 
-            content += "Total:".PadRight(18) + Convert.ToString(TotalProbability).PadRight(18) +
-           Convert.ToString(totalCondEntropy).PadRight(18);
+            content += "Total:".PadRight(18) + Convert.ToString(TotalJointProbability).PadRight(18) +
+                        Convert.ToString(totalCondEntropy).PadRight(18);
+
+            content += "\nRedundancy: ".PadRight(19) + Convert.ToString(Redundancy).PadRight(15);
 
             Filtering.WriteText(Filtering.ConditionalPath, content);
-
         }
-
 
         public static void MonogramTable(string FilteredText)
         {
             SetFrequency(FilteredText);
             SetProbability(SingleLetters);
             SetEntropyForAll(SingleLetters, 1);
-            //SetEntropy(SingleLetters);
+            CalculateRedundancy(TotalEntropy);
             WriteMonogramTable();
         }
 
@@ -267,17 +306,30 @@ namespace Ad_Info_Theory
             JointFrequency(FilteredText);
             SetJointProbability(SingleLetters);
             SetEntropyForAll(JointLetters1, 2);
-            //SetJointEntropy();
+            CalculateRedundancy(TotalJointEntropy);
             WriteDigramTable();
         }
 
-        public static void ConditionalTable(string FilteredText)
+        public static void ConditionalTable()
         {
             // There are no need to calculate frequency in conditional table.
             SetCondProbability();
             SetEntropyForAll(CondLetters, 3);
-            //SetCondEntropy();
+            CalculateRedundancy(totalCondEntropy);
             WriteConditionalTable();
+        }
+
+        // Generates Monogram, Diagram and Conditional Tables
+        public static void PrintAllTables(string FilteredText)
+        {
+            // Table 1: Monograms with Blanks
+            Analyzer.MonogramTable(FilteredText);
+
+            // Table 2: Diagrams with Blanks
+            Analyzer.DigramTable(FilteredText);
+
+            // Table 3: Conditionals with Blanks
+            Analyzer.ConditionalTable();
         }
 
     }
@@ -288,7 +340,6 @@ namespace Ad_Info_Theory
         public int    Frequency              { get; set; }
         public double Probability            { get; set; }
         public double Entropy                { get; set; }
-        public double ConditionalProbability { get; set; }
     }
 
 

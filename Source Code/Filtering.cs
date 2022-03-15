@@ -4,24 +4,27 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Ad_Info_Theory
+namespace InfoTheory
 {
     class Filtering
     {
         // Datapaths
-        public static string InputTextPath    = @"C:\Users\User\Desktop\Adv_Inf_Th._HW1\Input.txt";
-        public static string FilteredTextPath = @"C:\Users\User\Desktop\Adv_Inf_Th._HW1\FilteredText.txt";
-        public static string MonogramPath = @"C:\Users\User\Desktop\Adv_Inf_Th._HW1\Monogram.txt";
-        public static string DiagramPath = @"C:\Users\User\Desktop\Adv_Inf_Th._HW1\Diagram.txt";
-        public static string ConditionalPath = @"C:\Users\User\Desktop\Adv_Inf_Th._HW1\Conditional.txt";
+        public static string InputTextPath    = @"C:\Users\User\Desktop\Adv_Inf_Th._HW1\input.txt";
+        public static string FilteredTextPath = @"C:\Users\User\Desktop\Adv_Inf_Th._HW1\filtered.txt";
+        public static string MonogramPath     = @"C:\Users\User\Desktop\Adv_Inf_Th._HW1\monogram.txt";
+        public static string DigramPath       = @"C:\Users\User\Desktop\Adv_Inf_Th._HW1\digram.txt";
+        public static string ConditionalPath  = @"C:\Users\User\Desktop\Adv_Inf_Th._HW1\conditional.txt";
+        public static string LookupPath       = @"C:\Users\User\Desktop\Adv_Inf_Th._HW1\lookup.txt";
+        public static string CompressedPath   = @"C:\Users\User\Desktop\Adv_Inf_Th._HW1\compressed.txt";
+        public static string DecompressedPath = @"C:\Users\User\Desktop\Adv_Inf_Th._HW1\decompressed.txt";
 
-        public static string ReadRawText()
+        public static string ReadText(string Datapath)
         {
             string text = "";
             //Read the input file
             try
             {
-                text = File.ReadAllText(InputTextPath);
+                text = File.ReadAllText(Datapath);
             }
             catch (FileNotFoundException e)
             {
@@ -73,10 +76,9 @@ namespace Ad_Info_Theory
             strResult.Append(upperCaseLetters);
             // Uppercase İ do not exist in English, we must replace with I.
             strResult = strResult.Replace("İ", "I");
-            // Can not represent blank character so '*' symbol is used for representation.
+            // Can not represent blank character so '-' symbol is used for representation.
             strResult = strResult.Replace(" ", "-");
             upperCaseLetters = strResult.ToString();
-
             return upperCaseLetters;
         }
 
@@ -100,7 +102,7 @@ namespace Ad_Info_Theory
             // Eliminate consecutively duplicating blank characters.
             FilteredText = EliminateConsecutiveBlanks(FilteredText);
             // Trim after the 100.000 characters
-            FilteredText = TrimCharacters(FilteredText);
+            //FilteredText = TrimCharacters(FilteredText);
             // Make letters uppercase and use "-" instead of blank char.
             FilteredText = PrepareText(FilteredText);
 
